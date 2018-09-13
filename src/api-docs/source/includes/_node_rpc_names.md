@@ -5,11 +5,11 @@
 ```shell--curl
 curl $url \
   -X POST \
-  --data '{ "method": "getnameinfo", "params": [<your-name>] }'
+  --data '{ "method": "getnameinfo", "params": [ 'pi'] }'
 ```
 
 ```shell--cli
-hsd-cli rpc getnameinfo  <your-name>
+hsd-rpc getnameinfo pi
 ```
 
 ```javascript
@@ -26,12 +26,12 @@ const clientOptions = {
 const client = new NodeClient(clientOptions);
 
 (async () => {
-  const result = await client.execute('getnameinfo', [ <your-name> ]);
+  const result = await client.execute('getnameinfo', [ 'pi' ]);
   console.log(result);
 })();
 ```
 
-> getnameinfo returns JSON structured like this: 
+> getnameinfo returns JSON structured like this: (info is empty if name has not yet been auctioned).
 
 ```json
 {
@@ -41,8 +41,8 @@ const client = new NodeClient(clientOptions);
       "week":20,
       "start":3024 
     },
-		"info": {
-    "name": "your name",
+	"info": {
+    "name": "pi",
     "nameHash": "512da52b8aba40722262447a53ff36f1ab854a5dd1ea1bf92d0aed18a50ebca9",
     "state": "CLOSED",
     "height": 7203, 
@@ -85,6 +85,7 @@ Name | Type |  Description
 reserved | Boolean | true if the name is pre-reserved for it's existing owner to claim via DNSSEC proof.
 week | int | estimated number of weeks after mainnet launch that name will become available (if not reserved)
 start | int | exact block number that name will become available for bidding (if not reserved)
+state | string | the current auction state of the name (BIDDING, CLOSED)
 height | int | block height at which auction closed
 renewal | int | block height at which rewnewal period begins
 owner | int | UTXO to which the name belongs
